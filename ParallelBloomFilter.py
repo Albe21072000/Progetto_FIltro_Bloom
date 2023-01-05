@@ -10,10 +10,12 @@ class ParallelBloomFilter(BloomFilter):
 
     def inizializzaFiltro(self, array):  # metodo che inizializza il filtro in parallelo
         risHash = []  # inizializzo la lista che conterrà il risultato dei vari hash
-        for j in range(0, self.numFunzHash):  # applico in parallelo una funzione hash alla volta
-            risHash.extend(  # appendo volta volta i risultati dell'applicazione della j-esima funzione hash alla lista
-                Parallel(n_jobs=self.numero_thread)(
-                    delayed(applicahash)(array[i], self.size, j) for i in range(0, len(array))))
+        with Parallel(n_jobs=self.numero_thread) as parallel:  # evito che i threads vengano distrutti e ricreati ad
+            # ogni iterazione del ciclo for
+            for j in range(0, self.numFunzHash):  # applico in parallelo una funzione hash alla volta
+                risHash.extend(  # appendo volta volta i risultati dell'applicazione della j-esima funzione hash alla
+                    # lista
+                    parallel(delayed(applicahash)(array[i], self.size, j) for i in range(0, len(array))))
         for i in range(0, len(risHash)):  # vado quindi a porre a uno le celle del filtro
             # nelle posizioni trovate in precedenza
             self.filter[risHash[i]] = 1
