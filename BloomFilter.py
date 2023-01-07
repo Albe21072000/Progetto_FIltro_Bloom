@@ -28,7 +28,7 @@ def swapCaseHash(string, n) -> int:  # funzione che applica la prima funzione ha
 
 def doubleHash(string, n) -> int:  # funzione che applica sempre il basic hash alla stringa criptata con la funzione
     # di crittografia hash fornita da joblib
-    return basicHash(hash(string), n) % n
+    return basicHash(hash(string), n)
 
 
 def sha256Hash(string, n) -> int:  # funzione che applica il basic hash alla stringa criptata con la funzione sha256
@@ -68,7 +68,6 @@ def applicahash(string, n, i) -> int:  # funzione che, in base all'indice i pass
             return sha256Hash(string, n)
         case 5:
             return repeatedsha256Hash(string, n)
-
     return mmh3hash(string, n, i)
 
 
@@ -79,17 +78,20 @@ class BloomFilter:  # superclasse che definisce il costruttore e il metodo per o
         self.filter = [0] * size  # inizializzo il filtro con tutti i valori a zero
         self.numFunzHash = numFunzHash  # numero di funzioni hash desiderate
 
-    def probFalsiPositivi(self, array) -> float:  # restituisce la probabilità che il controllo classifichi
+    def probFalsiPositivi(self, lista) -> float:  # restituisce la probabilità che il controllo classifichi
         # erroneamente un indirizzo come sicuro
-        return (1 - math.e ** (-1 * self.numFunzHash * len(array) / self.size)) ** self.numFunzHash
+        return (1 - math.e ** (-1 * self.numFunzHash * len(lista) / self.size)) ** self.numFunzHash
 
     # metodi astratti che, una volta definiti, conterranno il codice che permetterà d'inizializzare il filtro
     # e di controllare se un indirizzo è sicuro o meno
-    def inizializzaFiltro(self, array):
+    def inizializzaFiltro(self, indirizzisicuri):
         pass
 
-    def controllaIndirizzo(self, address) -> bool:
-        pass
+    def controllaIndirizzo(self, address) -> bool:  # metodo per verificare se un indirizzo è considerato sicuro
+        for i in range(0, self.numFunzHash):
+            if self.filter[applicahash(address, self.size, i)] == 0:
+                return False
+        return True
 
 
 # lista d'indirizzi sicuri (per la maggior parte generata casualmente)
@@ -120,3 +122,4 @@ indirizziSicuri = [
     'moxfulder @ optonline.net', 'engelen @ aol.com', 'agolomsh @ msn.com', 'kalpol @ msn.com', 'sinkou @ att.net',
     'scitext @ sbcglobal.net', 'tangsh @ verizon.net'
 ]
+

@@ -8,32 +8,20 @@ class ParallelBloomFilter(BloomFilter):
         super().__init__(size, numFunzHash)
         self.numero_thread = numero_thread  # numero di thread paralleli massimo
 
-    def inizializzaFiltro(self, array):  # metodo che inizializza il filtro in parallelo
+    def inizializzaFiltro(self, indirizzisicuri):  # metodo che inizializza il filtro in parallelo
         risHash = []  # inizializzo la lista che conterrà il risultato dei vari hash
         with Parallel(n_jobs=self.numero_thread) as parallel:  # evito che i threads vengano distrutti e ricreati ad
             # ogni iterazione del ciclo for
             for j in range(0, self.numFunzHash):  # applico in parallelo una funzione hash alla volta
                 risHash.extend(  # appendo volta volta i risultati dell'applicazione della j-esima funzione hash alla
                     # lista
-                    parallel(delayed(applicahash)(array[i], self.size, j) for i in range(0, len(array))))
+                    parallel(delayed(applicahash)(indirizzisicuri[i], self.size, j) for i in range(0, len(indirizzisicuri))))
         for i in range(0, len(risHash)):  # vado quindi a porre a uno le celle del filtro
             # nelle posizioni trovate in precedenza
             self.filter[risHash[i]] = 1
 
-    def controllaIndirizzo(self, address) -> bool:
-        risultati = []  # Inizializzo la lista che conterrà i risultati delle varie funzioni hash sulla stringa
-        risultati.extend(
-            Parallel(n_jobs=self.numero_thread)(  # In questo caso parallelizzo rispetto alle funzioni di hash,
-                # in quanto devo considerare un indirizzo alla volta e non più una lista
-                delayed(applicahash)(address, self.size, i) for i in range(0, self.numFunzHash)))
-        for i in range(0, self.numFunzHash):
-            if self.filter[risultati[i]] == 0:  # Controllo se tutte le posizioni del filtro individuate in
-                # precedenza contengano il valore uno, altrimenti ritorno falso
-                return False
-        return True
 
-
-if __name__ == "__main__":
+if __name__ == "__main__":  # non necessario, lo uso per tenere in ordine il codice
     bfp = ParallelBloomFilter(800, 7, 16)  # Instanzio un nuovo filtro di Bloom parallelo
     print("Probabilità di incontrare falsi positivi inizializzando il filtro con una lista di " + str(
         len(indirizziSicuri)) + " parole che non si ripetono: " + str(
@@ -43,7 +31,6 @@ if __name__ == "__main__":
     tempo_fine = time.time()
     print('Tempo di inizializzazione del filtro parallelo con ' + str(bfp.numero_thread) + ' thread: ' + str(
         tempo_fine - tempo_inizio) + ' secondi')
-    tempo_inizio = time.time()
     print('Risultato dei controlli: ')
     # Testo il controllo con alcuni indirizzi sicuri e non
     print(bfp.controllaIndirizzo("spam.scam@fraud.com"))
@@ -56,4 +43,3 @@ if __name__ == "__main__":
     print(bfp.controllaIndirizzo("boh"))
     print(bfp.controllaIndirizzo("prova"))
     tempo_fine = time.time()
-    print('Tempo di controllo degli indirizzi del filtro parallelo: ' + str(tempo_fine - tempo_inizio) + ' secondi')
