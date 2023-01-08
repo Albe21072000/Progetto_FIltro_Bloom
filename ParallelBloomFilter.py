@@ -42,4 +42,3 @@ if __name__ == "__main__":  # non necessario, lo uso per tenere in ordine il cod
     print(bfp.controllaIndirizzo("thomasj@icloud.com"))  # indirizzo sicuro
     print(bfp.controllaIndirizzo("boh"))
     print(bfp.controllaIndirizzo("prova"))
-    tempo_fine = time.time()
