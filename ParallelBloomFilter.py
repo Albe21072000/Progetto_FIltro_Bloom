@@ -15,7 +15,9 @@ class ParallelBloomFilter(BloomFilter):
             for j in range(0, self.numFunzHash):  # applico in parallelo una funzione hash alla volta
                 risHash.extend(  # appendo volta volta i risultati dell'applicazione della j-esima funzione hash alla
                     # lista
-                    parallel(delayed(applicahash)(indirizzisicuri[i], self.size, j) for i in range(0, len(indirizzisicuri))))
+                    parallel(delayed(applicahash)(indirizzisicuri[i], self.size, j)
+                             for i in range(0, len(indirizzisicuri)))) # il metodo applicahash verrà eseguito in
+                # parallelo su più elementi da inizializzare contemporaneamente (come in un parallel for)
         for i in range(0, len(risHash)):  # vado quindi a porre a uno le celle del filtro
             # nelle posizioni trovate in precedenza
             self.filter[risHash[i]] = 1
