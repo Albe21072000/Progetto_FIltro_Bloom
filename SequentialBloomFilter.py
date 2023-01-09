@@ -14,7 +14,7 @@ class SequentialBloomFilter(BloomFilter):
             self.filter[risHash[i]] = 1
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # non necessario, lo uso per tenere in ordine il codice
     bfs = SequentialBloomFilter(800, 7)  # Instanzio un nuovo filtro di Bloom sequenziale
     print("Probabilità di incontrare falsi positivi inizializzando il filtro con una lista di " +
           str(len(indirizziSicuri)) + " parole che non si ripetono: " +

@@ -4,71 +4,71 @@ from joblib import *
 import math
 
 
-def basicHash(string, n) -> int:  # funzione hash di base che somma i valori ASCII dei caratteri della stringa e
+def basicHash(stringa, n) -> int:  # funzione hash di base che somma i valori ASCII dei caratteri della stringa e
     # ne calcola il modulo n
     tot = 0
-    for i in string:
+    for i in stringa:
         tot = tot + ord(i)
     return tot % n
 
 
-def repeatedHash(string, n) -> int:  # funzione che ripete l'hash visto prima un numero di volte pari alla lunghezza
+def repeatedHash(stringa, n) -> int:  # funzione che ripete l'hash visto prima un numero di volte pari alla lunghezza
     # della stringa alla quarta con un modulo sempre diverso
     ris = 0
-    for i in range(0, len(string) ** 4):
-        ris += basicHash(string, i + 1)
+    for i in range(0, len(stringa) ** 4):
+        ris += basicHash(stringa, i + 1)
         ris %= n
     return ris
 
 
-def swapCaseHash(string, n) -> int:  # funzione che applica la prima funzione hash alla stringa contenente le
+def swapCaseHash(stringa, n) -> int:  # funzione che applica la prima funzione hash alla stringa contenente le
     # maiuscole e le minuscole invertite rispetto alla stringa in ingresso
-    return basicHash(string.swapcase(), n)
+    return basicHash(stringa.swapcase(), n)
 
 
-def doubleHash(string, n) -> int:  # funzione che applica sempre il basic hash alla stringa criptata con la funzione
+def doubleHash(stringa, n) -> int:  # funzione che applica sempre il basic hash alla stringa criptata con la funzione
     # di crittografia hash fornita da joblib
-    return basicHash(hash(string), n)
+    return basicHash(hash(stringa), n)
 
 
-def sha256Hash(string, n) -> int:  # funzione che applica il basic hash alla stringa criptata con la funzione sha256
+def sha256Hash(stringa, n) -> int:  # funzione che applica il basic hash alla stringa criptata con la funzione sha256
     # della libreria hashlib
-    return basicHash(hashlib.sha256(string.encode('utf-8')).hexdigest(), n)
+    return basicHash(hashlib.sha256(stringa.encode('utf-8')).hexdigest(), n)
 
 
-def repeatedsha256Hash(string,
+def repeatedsha256Hash(stringa,
                        n) -> int:  # funzione che ripete l'hash visto prima un numero di volte pari alla lunghezza
     # della stringa alla quarta variando il modulo
     ris = 0
-    for i in range(0, len(string) ** 4):  # All elements of the matrix are added together
-        ris += sha256Hash(string, i + 1)
+    for i in range(0, len(stringa) ** 4):  # All elements of the matrix are added together
+        ris += sha256Hash(stringa, i + 1)
         ris %= n
     return ris  # The module n operation is applied to return an index for the bit array
 
 
-def mmh3hash(string, i, n) -> int:  # funzione che ritorna il valore fornito dalla funzione di hash della libreria
+def mmh3hash(stringa, i, n) -> int:  # funzione che ritorna il valore fornito dalla funzione di hash della libreria
     # mmh3, con il parametro i che rappresenta il seed desiderato,
     # a cui devo andare ad applicare il modulo n per evitare che tale valore possa essere maggiore di n
-    return mmh3.hash(string, i) % n
+    return mmh3.hash(stringa, i) % n
 
 
-def applicahash(string, n, i) -> int:  # funzione che, in base all'indice i passato in ingresso, applica una funzione di
+def applicahash(stringa, n, i) -> int:  # funzione che, in base all'indice i passato in ingresso, applica una funzione di
     # hash diversa e ne restituisce il risultato (in caso d'indici maggiori di 5 ritornerà
     # il valore della function mmh3hash ma con seed pari all'indice i stesso)
     match i:
         case 0:
-            return basicHash(string, n)
+            return basicHash(stringa, n)
         case 1:
-            return repeatedHash(string, n)
+            return repeatedHash(stringa, n)
         case 2:
-            return doubleHash(string, n)
+            return doubleHash(stringa, n)
         case 3:
-            return swapCaseHash(string, n)
+            return swapCaseHash(stringa, n)
         case 4:
-            return sha256Hash(string, n)
+            return sha256Hash(stringa, n)
         case 5:
-            return repeatedsha256Hash(string, n)
-    return mmh3hash(string, n, i)
+            return repeatedsha256Hash(stringa, n)
+    return mmh3hash(stringa, n, i)
 
 
 class BloomFilter:  # superclasse che definisce il costruttore e il metodo per ottenere la probabilità di falsi
@@ -78,18 +78,18 @@ class BloomFilter:  # superclasse che definisce il costruttore e il metodo per o
         self.filter = [0] * size  # inizializzo il filtro con tutti i valori a zero
         self.numFunzHash = numFunzHash  # numero di funzioni hash desiderate
 
-    def probFalsiPositivi(self, lista) -> float:  # restituisce la probabilità che il controllo classifichi
-        # erroneamente un indirizzo come sicuro
-        return (1 - math.e ** (-1 * self.numFunzHash * len(lista) / self.size)) ** self.numFunzHash
+    def probFalsiPositivi(self, listaIndirizzisicuri) -> float:  # restituisce la probabilità che il controllo
+        # classifichi erroneamente un indirizzo come sicuro
+        return (1 - math.e ** (-1 * self.numFunzHash * len(listaIndirizzisicuri) / self.size)) ** self.numFunzHash
 
     # metodi astratti che, una volta definiti, conterranno il codice che permetterà d'inizializzare il filtro
     # e di controllare se un indirizzo è sicuro o meno
     def inizializzaFiltro(self, indirizzisicuri):
         pass
 
-    def controllaIndirizzo(self, address) -> bool:  # metodo per verificare se un indirizzo è considerato sicuro
+    def controllaIndirizzo(self, indirizzo) -> bool:  # metodo per verificare se un indirizzo è considerato sicuro
         for i in range(0, self.numFunzHash):
-            if self.filter[applicahash(address, self.size, i)] == 0:
+            if self.filter[applicahash(indirizzo, self.size, i)] == 0:
                 return False
         return True
 
