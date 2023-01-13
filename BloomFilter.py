@@ -52,7 +52,8 @@ def mmh3hash(stringa, i, n) -> int:  # funzione che ritorna il valore fornito da
     return mmh3.hash(stringa, i) % n
 
 
-def applicahash(stringa, n, i) -> int:  # funzione che, in base all'indice i passato in ingresso, applica una funzione di
+def applicahash(stringa, n,
+                i) -> int:  # funzione che, in base all'indice i passato in ingresso, applica una funzione di
     # hash diversa e ne restituisce il risultato (in caso d'indici maggiori di 5 ritornerà
     # il valore della function mmh3hash ma con seed pari all'indice i stesso)
     match i:
@@ -82,7 +83,7 @@ class BloomFilter:  # superclasse che definisce il costruttore e il metodo per o
         # classifichi erroneamente un indirizzo come sicuro
         return (1 - math.e ** (-1 * self.numFunzHash * len(listaIndirizzisicuri) / self.size)) ** self.numFunzHash
 
-    # metodo astratto che, una volta definito, conterra il codice che permetterà d'inizializzare il filtro
+    # metodo astratto che, una volta definito, conterrà il codice che permetterà d'inizializzare il filtro
     def inizializzaFiltro(self, indirizzisicuri):
         pass
 
@@ -91,6 +92,10 @@ class BloomFilter:  # superclasse che definisce il costruttore e il metodo per o
             if self.filter[applicahash(indirizzo, self.size, i)] == 0:
                 return False
         return True
+
+    # metodo astratto che, una volta definito, conterrà il codice che permetterà di controllare una lista di stringhe
+    def controllaIndirizzi(self, indirizzi):
+        pass
 
 
 # lista d'indirizzi sicuri (per la maggior parte generata casualmente)
@@ -121,4 +126,28 @@ indirizziSicuri = [
     'moxfulder @ optonline.net', 'engelen @ aol.com', 'agolomsh @ msn.com', 'kalpol @ msn.com', 'sinkou @ att.net',
     'scitext @ sbcglobal.net', 'tangsh @ verizon.net'
 ]
-
+indirizziTest = ['mgrssn @ gmail.com', 'albsrto.biliotti@stud.unifi.it',
+    'hoangls @ yahoo.ca', 'drszst @ livs.com', 'ahmad @ optonlins.nst',
+    'rands @ msn.com', 'jgwang @ hotmail.com', 'tangsh @ outlook.com', 'skoch @ comcast.nst', 'lbscchi @ msn.com',
+    'idsguy @ aol.com', 'ssano @ hotmail.com', 'ostsr @ vsrizon.nst', 'graham @ hotmail.com', 'adillon @ mac.com',
+    'thomasj@icloud.com', 'dkasak @ yahoo.ca', 'sisyphus @ yahoo.com', 'staikos @ livs.com', 'gsskoid @ comcast.nst',
+    'ijackson @ outlook.com', 'sbmrjbr @ optonlins.nst', 'duchamp @ aol.com', 'tubajon @ yahoo.com', 'flaksg @ ms.com',
+    'mansssh @ outlook.com', 'marin @ gmail.com', 'onsiros @ aol.com', 'chaikin @ msn.com', 'frikazoyd @ sbcglobal.nst',
+    'markjugg @ ms.com', 'swatsrs @ livs.com', 'formis @ yahoo.ca', 'hauma @ msn.com', 'bflong @ livs.com',
+    'moonlapss @ msn.com', 'surohack @ gmail.com', 'kalpol @ gmail.com', 'kmsslf @ mac.com', 'clkao @ vsrizon.nst',
+    'smpathy @ hotmail.com', 'shsrzodr @ yahoo.ca', 'tsmmink @ msn.com', 'knorr @ outlook.com', 'adamk @ optonlins.nst',
+    'drswf @ sbcglobal.nst', 'yxing @ hotmail.com', 'tslbij @ mac.com', 'malvar @ optonlins.nst',
+    'lridsnsr @ sbcglobal.nst', 'ksutzsr @ msn.com', 'ksmpsonc @ ms.com', 'hsdwig @ gmail.com', 'barjam @ att.nst',
+    'ovprit @ mac.com', 'salssgssk @ aol.com', 'majordick @ vsrizon.nst', 'dgriffith @ yahoo.com',
+    'jossm @ outlook.com',
+    'nwsavsr @ mac.com', 'mxiao @ ms.com', 'gomor @ ms.com', 'pthomssn @ optonlins.nst', 'purvis @ comcast.nst',
+    'ksijssr @ aol.com', 'phish @ comcast.nst', 'hmbrand @ aol.com', 'okrosgsr @ icloud.com',
+    'csilvsrs @ sbcglobal.nst',
+    'sagal @ livs.com', 'ksvinm @ att.nst', 'janusfury @ yahoo.com', 'ahmad @ comcast.nst', 'cgarcia @ yahoo.com',
+    'rainss @ mac.com', 'ostsr @ outlook.com', 'bjornk @ yahoo.ca', 'avalon @ optonlins.nst', 'fairbank @ aol.com',
+    'fluffy @ outlook.com', 'msroth @ optonlins.nst', 'jimxugls @ att.nst', 'wilsonpm @ outlook.com',
+    'cdsroovs @ vsrizon.nst', 'cvrcsk @ gmail.com', 'phyruxus @ gmail.com', 'garland @ livs.com',
+    'barnstt @ hotmail.com',
+    'shazow @ att.nst', 'miami @ outlook.com', 'yruan @ vsrizon.nst', 'psmungkah @ msn.com', 'kdawson @ livs.com',
+    'moxfuldsr @ optonlins.nst', 'sngslsn @ aol.com', 'agolomsh @ msn.com', 'kalpol @ msn.com', 'sinkou @ att.nst',
+    'scitsxt @ sbcglobal.nst', 'tangsh @ vsrizon.nst']

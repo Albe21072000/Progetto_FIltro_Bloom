@@ -16,11 +16,19 @@ class ParallelBloomFilter(BloomFilter):
                 risHash.extend(  # appendo volta volta i risultati dell'applicazione della j-esima funzione hash alla
                     # lista
                     parallel(delayed(applicahash)(indirizzisicuri[i], self.size, j)
-                             for i in range(0, len(indirizzisicuri)))) # il metodo applicahash verrà eseguito in
+                             for i in range(0, len(indirizzisicuri))))  # il metodo applicahash verrà eseguito in
                 # parallelo su più elementi da inizializzare contemporaneamente (come in un parallel for)
         for i in range(0, len(risHash)):  # vado quindi a porre a uno le celle del filtro
             # nelle posizioni trovate in precedenza
             self.filter[risHash[i]] = 1
+
+    def controllaIndirizzi(self, indirizzi):
+        ris = []
+        ris.extend(Parallel(n_jobs=self.numero_thread)(delayed(self.controllaIndirizzo)(indirizzi[i])
+                                                       for i in range(0, len(indirizzi))))
+        # parallelizzo applicando contemporaneamente la stessa funzione per il controllo della stringa a più parole
+        # in contemporanea
+        return ris
 
 
 if __name__ == "__main__":  # non necessario, lo uso per tenere in ordine il codice
@@ -34,13 +42,8 @@ if __name__ == "__main__":  # non necessario, lo uso per tenere in ordine il cod
     print('Tempo di inizializzazione del filtro parallelo con ' + str(bfp.numero_thread) + ' thread: ' + str(
         tempo_fine - tempo_inizio) + ' secondi')
     print('Risultato dei controlli: ')
-    # Testo il controllo con alcuni indirizzi sicuri e non
-    print(bfp.controllaIndirizzo("spam.scam@fraud.com"))
-    print(bfp.controllaIndirizzo("alberto.biliotti@stud.unifi.it"))  # indirizzo sicuro
-    print(bfp.controllaIndirizzo("albe.biliotti@gmail.com"))
-    print(bfp.controllaIndirizzo("sam.scam@fraud.com"))
-    print(bfp.controllaIndirizzo("albrto.biliotti@stud.unifi.it"))
-    print(bfp.controllaIndirizzo("ale.biliott@gmail.com"))
-    print(bfp.controllaIndirizzo("thomasj@icloud.com"))  # indirizzo sicuro
-    print(bfp.controllaIndirizzo("boh"))
-    print(bfp.controllaIndirizzo("prova"))
+    # Testo il controllo con una lista d'indirizzi sicuri e non
+    tempo_inizio = time.time()
+    print(bfp.controllaIndirizzi(indirizziTest))
+    tempo_fine = time.time()
+    print('Tempo di controllo: ' + str(tempo_fine - tempo_inizio) + ' secondi')
