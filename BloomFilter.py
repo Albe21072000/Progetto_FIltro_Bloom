@@ -82,8 +82,7 @@ class BloomFilter:  # superclasse che definisce il costruttore e il metodo per o
         # classifichi erroneamente un indirizzo come sicuro
         return (1 - math.e ** (-1 * self.numFunzHash * len(listaIndirizzisicuri) / self.size)) ** self.numFunzHash
 
-    # metodi astratti che, una volta definiti, conterranno il codice che permetterà d'inizializzare il filtro
-    # e di controllare se un indirizzo è sicuro o meno
+    # metodo astratto che, una volta definito, conterra il codice che permetterà d'inizializzare il filtro
     def inizializzaFiltro(self, indirizzisicuri):
         pass
 
