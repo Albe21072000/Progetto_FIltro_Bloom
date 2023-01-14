@@ -126,6 +126,8 @@ indirizziSicuri = [
     'moxfulder @ optonline.net', 'engelen @ aol.com', 'agolomsh @ msn.com', 'kalpol @ msn.com', 'sinkou @ att.net',
     'scitext @ sbcglobal.net', 'tangsh @ verizon.net'
 ]
+# Lista d'indirizzi da controllare (ottenuta sostituendo tutte le lettere e con s nelle stringhe della lista
+# precedente) contenente anche alcuni indirizzi simili a quelli della lista d'indirizzi "sicuri".
 indirizziTest = ['mgrssn @ gmail.com', 'albsrto.biliotti@stud.unifi.it',
     'hoangls @ yahoo.ca', 'drszst @ livs.com', 'ahmad @ optonlins.nst',
     'rands @ msn.com', 'jgwang @ hotmail.com', 'tangsh @ outlook.com', 'skoch @ comcast.nst', 'lbscchi @ msn.com',

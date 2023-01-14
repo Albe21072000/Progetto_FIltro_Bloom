@@ -15,8 +15,8 @@ class SequentialBloomFilter(BloomFilter):
             self.filter[risHash[i]] = 1
 
     def controllaIndirizzi(self, indirizzi):
-        ris = []
-        ris.extend(self.controllaIndirizzo(indirizzi[i]) for i in range(0, len(indirizzi)))
+        ris = [self.controllaIndirizzo(indirizzi[i]) for i in range(0, len(indirizzi))] # sfrutto la list
+        # comprehension per generare la lista dei risultati dei controlli sulle singole stringhe
         return ris
 
 
